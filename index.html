@@ -1,106 +1,554 @@
 <!doctype html>
 <html lang="zh-CN">
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>爱翻译隐私政策</title>
-    <style>
-      :root {
-        color-scheme: light;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
-      }
-
-      body {
-        background: #f4f7fb;
-        color: #172033;
-        line-height: 1.72;
-        margin: 0;
-      }
-
-      main {
-        background: #ffffff;
-        border: 1px solid #d9e2ef;
-        border-radius: 8px;
-        box-shadow: 0 18px 42px rgba(31, 48, 76, 0.08);
-        margin: 32px auto;
-        max-width: 920px;
-        padding: 32px;
-      }
-
-      h1 {
-        font-size: 30px;
-        line-height: 1.2;
-        margin: 0 0 8px;
-      }
-
-      h2 {
-        border-top: 1px solid #e5edf7;
-        font-size: 20px;
-        margin: 28px 0 10px;
-        padding-top: 22px;
-      }
-
-      p,
-      li {
-        font-size: 15px;
-      }
-
-      .updated {
-        color: #66758a;
-        margin-bottom: 24px;
-      }
-
-      ul {
-        padding-left: 22px;
-      }
-
-      strong {
-        color: #0f1e35;
-      }
-
-      @media (max-width: 720px) {
-        main {
-          border-radius: 0;
-          margin: 0;
-          padding: 22px;
-        }
-      }
-    </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Qwerty Personal Trainer</title>
+    <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <main>
-      <h1>爱翻译隐私政策</h1>
-      <p class="updated">最后更新日期：2026 年 5 月 23 日</p>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true">QP</div>
+          <div>
+            <strong>Qwerty Personal</strong>
+            <span>单词与键盘肌肉记忆</span>
+          </div>
+        </div>
 
-      <p>爱翻译是一款网页翻译浏览器扩展，用于帮助用户翻译网页正文、选中文字、动态弹出菜单以及图片或视频画面中的可见文字。</p>
-      <p>本扩展不会出售、出租或转让用户数据，不会将用户数据用于广告、画像、信用评估或贷款目的。</p>
+        <div class="profile-card">
+          <button class="avatar-button" id="avatarButton" type="button" title="切换账号">R</button>
+          <div>
+            <p id="profileName">访客</p>
+            <span id="profileMeta">本地个人账号</span>
+          </div>
+        </div>
 
-      <h2>本扩展可能处理的数据</h2>
-      <p><strong>网站内容：</strong>当用户主动使用翻译功能时，扩展会读取当前网页的可见文字、选中文字，或视觉截图中的文字内容，并将这些内容发送到用户自行配置的 AI 翻译接口，以获得翻译结果。</p>
-      <p><strong>个人身份信息：</strong>扩展不会主动收集个人身份信息。但如果用户翻译的网页内容中包含姓名、邮箱、地址等信息，这些内容可能会随翻译请求一起发送到用户配置的 AI 接口。该处理仅用于完成用户主动触发的翻译功能。</p>
-      <p><strong>设置数据：</strong>扩展会在本地保存用户的语言偏好、模型配置、悬浮窗开关状态、翻译缓存和加密后的 API Key。这些数据用于保持用户设置、提升翻译速度和减少重复请求。</p>
+        <nav class="side-nav" aria-label="主要功能">
+          <button class="nav-item active" type="button" data-view="practice">练习</button>
+          <button class="nav-item" type="button" data-view="dashboard">统计</button>
+          <button class="nav-item" type="button" data-view="review">复习</button>
+          <button class="nav-item" type="button" data-view="library">词库</button>
+          <button class="nav-item" type="button" data-view="settings">设置</button>
+        </nav>
 
-      <h2>API Key 安全</h2>
-      <p>用户填写的 API Key 会加密后保存在浏览器本地存储中。扩展不会向作者或其他第三方服务器上传 API Key。</p>
+        <section class="sidebar-ai">
+          <button class="sidebar-ai-toggle" id="aiPanelToggle" type="button">
+            <span>AI 教练</span>
+            <strong id="aiPanelChevron">+</strong>
+          </button>
+          <div class="sidebar-ai-body" id="aiPanelBody">
+            <div class="ai-status" id="aiStatus">点击分析时才读取本地练习摘要。</div>
+            <button class="primary-button compact-button" id="aiAnalyzeButton" type="button">分析练习</button>
+            <div class="ai-output" id="aiOutput">
+              <p>AI 建议会显示在这里。</p>
+            </div>
+            <div class="ai-question compact">
+              <input id="aiQuestion" type="text" placeholder="追问 AI..." />
+              <button class="ghost-button" id="aiAskButton" type="button">问</button>
+            </div>
+            <details class="ai-context-detail">
+              <summary>将发送的摘要</summary>
+              <pre id="aiContextPreview"></pre>
+            </details>
+          </div>
+        </section>
 
-      <h2>第三方服务</h2>
-      <p>扩展本身不提供翻译服务器。用户可以自行配置 DeepSeek、OpenAI、Claude、Xiaomi MiMo 或其他兼容接口。翻译请求会发送到用户配置的接口服务商，相关数据处理也会受到对应服务商隐私政策约束。</p>
+        <div class="daily-card">
+          <div>
+            <span>今日目标</span>
+            <strong><span id="todayDone">0</span>/<span id="dailyGoal">30</span></strong>
+          </div>
+          <div class="goal-ring" id="goalRing">0%</div>
+        </div>
+      </aside>
 
-      <h2>数据用途</h2>
-      <p>扩展处理数据仅用于提供网页翻译、选中文字翻译、视觉翻译、连续翻译、翻译缓存和用户设置保存功能。扩展不会将数据用于与核心翻译功能无关的用途。</p>
+      <main class="main-content">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Personal Typing Lab</p>
+            <h1 id="viewTitle">今日练习</h1>
+          </div>
+          <div class="top-actions">
+            <button class="icon-button" id="themeButton" type="button" title="切换主题">◐</button>
+            <button class="primary-button" id="startButton" type="button">开始训练</button>
+            <button class="ghost-button training-control hidden" id="pauseButton" type="button">暂停</button>
+            <button class="ghost-button danger-button training-control hidden" id="stopButton" type="button">停止</button>
+          </div>
+        </header>
 
-      <h2>数据共享</h2>
-      <p>扩展不会向作者出售、出租或转让用户数据。除用户自行配置的 AI 翻译接口外，扩展不会主动向其他第三方共享用户数据。</p>
+        <section class="view active" id="practiceView" data-title="今日练习">
+          <div class="practice-grid">
+            <section class="trainer-panel">
+              <div class="practice-controls">
+                <label>
+                  词库
+                  <select id="dictSelect"></select>
+                </label>
+                <label>
+                  章节
+                  <select id="chapterSelect"></select>
+                </label>
+                <label>
+                  模式
+                  <select id="modeSelect">
+                    <option value="chapter">章节顺序</option>
+                    <option value="random">随机抽词</option>
+                    <option value="adaptive">薄弱自适应</option>
+                  </select>
+                </label>
+                <label>
+                  每组
+                  <input id="loopInput" type="number" min="10" max="10" value="10" />
+                </label>
+              </div>
 
-      <h2>用户控制</h2>
-      <ul>
-        <li>用户可以在扩展设置中修改或删除 AI 接口配置。</li>
-        <li>用户可以关闭自动翻译、视觉连续翻译和页面悬浮窗。</li>
-        <li>用户可以通过浏览器扩展管理页面卸载扩展并删除本地保存的数据。</li>
-      </ul>
+              <div class="word-stage" id="wordStage">
+                <div class="word-toolbar">
+                  <button class="toggle active" id="translationToggle" type="button">释义</button>
+                  <button class="toggle active" id="soundToggle" type="button">发音</button>
+                  <button class="toggle" id="dictationToggle" type="button">默写</button>
+                  <button class="toggle active" id="strictToggle" type="button">严格</button>
+                  <button class="toggle active" id="keySoundToggle" type="button">键音</button>
+                </div>
+                <div class="study-flow" id="studyFlow">
+                  <span id="phaseText">先熟悉，再默写</span>
+                  <strong id="groupProgress">0/10</strong>
+                </div>
+                <p class="phonetic" id="phoneticText">准备开始</p>
+                <div class="target-word" id="targetWord">practice</div>
+                <p class="translation" id="translationText">练习，实践</p>
+                <div class="definition-list" id="definitionList"></div>
+                <div class="example-card" id="exampleCard">
+                  <p class="example-en" id="exampleEn"></p>
+                  <p class="example-cn" id="exampleCn"></p>
+                </div>
+                <div class="phrase-card" id="phraseCard">
+                  <div class="phrase-tabs">
+                    <span>词组搭配</span>
+                    <span>派生</span>
+                  </div>
+                  <div class="phrase-list" id="phraseList"></div>
+                </div>
+                <div class="typed-word" id="typedWord" aria-live="polite"></div>
+                <input id="typingInput" autocomplete="off" spellcheck="false" aria-label="输入当前单词" />
+                <div class="word-actions">
+                  <button class="ghost-button" id="speakButton" type="button">发音</button>
+                  <button class="ghost-button" id="favoriteButton" type="button">收藏</button>
+                  <button class="ghost-button" id="skipButton" type="button">跳过</button>
+                </div>
+              </div>
+            </section>
 
-      <h2>联系方式</h2>
-      <p>如有隐私相关问题，可以通过 QQ 2791397512 联系作者。</p>
-    </main>
+            <aside class="stats-panel">
+              <div class="metric">
+                <span>时间</span>
+                <strong id="timeMetric">00:00</strong>
+              </div>
+              <div class="metric">
+                <span>WPM</span>
+                <strong id="wpmMetric">0</strong>
+              </div>
+              <div class="metric">
+                <span>正确率</span>
+                <strong id="accuracyMetric">100%</strong>
+              </div>
+              <div class="metric">
+                <span>已完成</span>
+                <strong id="completeMetric">0</strong>
+              </div>
+              <div class="focus-note">
+                <span>当前建议</span>
+                <p id="focusAdvice">先完成一组热身，系统会根据错键给你建议。</p>
+              </div>
+              <div class="focus-note">
+                <span>薄弱组合</span>
+                <p id="ngramAdvice">完成几次输入后，会统计最容易出错的字母组合。</p>
+              </div>
+            </aside>
+          </div>
+
+          <section class="keyboard-panel">
+            <div class="section-head">
+              <div>
+                <p class="eyebrow">Keyboard Heatmap</p>
+                <h2>键位热力图</h2>
+              </div>
+              <span id="weakKeyLabel">暂无薄弱键</span>
+            </div>
+            <div class="keyboard" id="keyboard"></div>
+          </section>
+        </section>
+
+        <section class="view" id="dashboardView" data-title="个人统计">
+          <div class="dashboard-grid">
+            <div class="summary-strip">
+              <div><span>总完成</span><strong id="totalWords">0</strong></div>
+              <div><span>平均 WPM</span><strong id="avgWpm">0</strong></div>
+              <div><span>连续天数</span><strong id="streakDays">0</strong></div>
+              <div><span>收藏词</span><strong id="favCount">0</strong></div>
+            </div>
+            <section class="chart-panel">
+              <div class="section-head">
+                <div>
+                  <p class="eyebrow">Last Sessions</p>
+                  <h2>最近练习</h2>
+                </div>
+              </div>
+              <div class="bar-chart" id="historyChart"></div>
+            </section>
+            <section class="session-panel">
+              <div class="section-head">
+                <div>
+                  <p class="eyebrow">Weak Patterns</p>
+                  <h2>薄弱字母组合</h2>
+                </div>
+              </div>
+              <div id="ngramList" class="session-list"></div>
+            </section>
+            <section class="session-panel">
+              <div class="section-head">
+                <div>
+                  <p class="eyebrow">Record</p>
+                  <h2>练习记录</h2>
+                </div>
+              </div>
+              <div id="sessionList" class="session-list"></div>
+            </section>
+          </div>
+        </section>
+
+        <section class="view" id="reviewView" data-title="复习中心">
+          <div class="review-layout">
+            <section class="review-panel">
+              <div class="section-head">
+                <div>
+                  <p class="eyebrow">Learned Words</p>
+                  <h2>已学单词复习</h2>
+                </div>
+                <button class="primary-button" id="practiceLearnedButton" type="button">看中文写英文</button>
+              </div>
+              <div id="learnedList" class="word-list"></div>
+            </section>
+            <section class="review-panel">
+              <div class="section-head">
+                <div>
+                  <p class="eyebrow">Review Queue</p>
+                  <h2>需要回炉的词</h2>
+                </div>
+                <button class="primary-button" id="practiceMistakesButton" type="button">练错词</button>
+              </div>
+              <div id="mistakeList" class="word-list"></div>
+            </section>
+            <section class="review-panel">
+              <div class="section-head">
+                <div>
+                  <p class="eyebrow">Favorites</p>
+                  <h2>收藏词</h2>
+                </div>
+                <button class="ghost-button" id="practiceFavsButton" type="button">练收藏</button>
+              </div>
+              <div id="favoriteList" class="word-list"></div>
+            </section>
+          </div>
+        </section>
+
+        <section class="view" id="libraryView" data-title="个人词库">
+          <div class="library-layout">
+            <section class="library-panel">
+              <div class="section-head">
+                <div>
+                  <p class="eyebrow">Custom Dictionary</p>
+                  <h2>导入自己的词</h2>
+                </div>
+              </div>
+              <textarea id="customWords" placeholder="每行一个词：word, 中文释义, /phonetic/"></textarea>
+              <div class="row-actions">
+                <button class="primary-button" id="saveCustomButton" type="button">保存到个人词库</button>
+                <button class="ghost-button" id="loadSampleButton" type="button">填入示例</button>
+              </div>
+            </section>
+            <section class="library-panel">
+              <div class="section-head">
+                <div>
+                  <p class="eyebrow">Data</p>
+                  <h2>个人数据</h2>
+                </div>
+              </div>
+              <div class="data-actions">
+                <button class="ghost-button" id="exportButton" type="button">导出备份</button>
+                <label class="file-button">
+                  导入备份
+                  <input id="importInput" type="file" accept="application/json" />
+                </label>
+                <button class="danger-button" id="resetButton" type="button">清空当前账号</button>
+              </div>
+              <pre id="dataPreview"></pre>
+            </section>
+            <section class="library-panel wide-panel">
+              <div class="section-head">
+                <div>
+                  <p class="eyebrow">Official Resources</p>
+                  <h2>官方词库资源</h2>
+                </div>
+                <span id="officialCount">0 个词库</span>
+              </div>
+              <div class="catalog-tools">
+                <input id="dictSearch" type="search" placeholder="搜索 CET、GRE、JavaScript、日语、考研..." />
+                <select id="categoryFilter"></select>
+              </div>
+              <div id="officialCatalog" class="catalog-list"></div>
+            </section>
+          </div>
+        </section>
+
+        <section class="view" id="settingsView" data-title="个性设置">
+          <form class="settings-form" id="settingsForm">
+            <label>
+              昵称
+              <input id="nameSetting" type="text" maxlength="18" />
+            </label>
+            <label>
+              每日目标词数
+              <input id="goalSetting" type="number" min="5" max="300" />
+            </label>
+            <label>
+              目标 WPM
+              <input id="wpmSetting" type="number" min="10" max="180" />
+            </label>
+            <label>
+              首选词库
+              <select id="preferredDictSetting"></select>
+            </label>
+            <label>
+              视觉主题
+              <select id="themeSetting">
+                <option value="light">清爽白</option>
+                <option value="mint">青柚薄荷</option>
+                <option value="sky">海盐蓝</option>
+                <option value="sakura">樱粉晨光</option>
+                <option value="citrus">柠檬气泡</option>
+                <option value="lavender">紫藤晚风</option>
+                <option value="candy">彩糖晴空</option>
+                <option value="aurora">极光薄荷</option>
+                <option value="latte">午后茶会</option>
+                <option value="idol">星辉舞台</option>
+                <option value="green">护眼绿</option>
+                <option value="ink">深色墨</option>
+              </select>
+            </label>
+            <label>
+              发音口音
+              <select id="pronSetting">
+                <option value="us">美音</option>
+                <option value="uk">英音</option>
+              </select>
+            </label>
+            <label>
+              键盘音效
+              <select id="keySoundSetting"></select>
+            </label>
+            <label class="wide">
+              给自己的练习提醒
+              <input id="noteSetting" type="text" maxlength="42" />
+            </label>
+            <div class="settings-divider wide">
+              <p class="eyebrow">AI API</p>
+              <h2>分析与拟人发音</h2>
+            </div>
+            <label>
+              AI 分析服务
+              <select id="aiProviderSetting">
+                <option value="openai">OpenAI</option>
+                <option value="deepseek">DeepSeek</option>
+                <option value="gemini">Gemini</option>
+                <option value="custom">自定义兼容接口</option>
+              </select>
+            </label>
+            <label>
+              分析模型
+              <select id="aiModelPresetSetting"></select>
+            </label>
+            <label class="wide">
+              API Key
+              <input id="aiApiKeySetting" type="password" placeholder="只保存在本地浏览器" autocomplete="off" />
+            </label>
+            <label class="wide">
+              自定义 Base URL
+              <input id="aiBaseUrlSetting" type="url" placeholder="例如：https://api.openai.com/v1" />
+            </label>
+            <label>
+              AI 发音服务
+              <select id="ttsProviderSetting">
+                <option value="browser">浏览器发音</option>
+                <option value="mimo">小米 MiMo TTS</option>
+                <option value="openai">OpenAI TTS</option>
+                <option value="custom">自定义 TTS 接口</option>
+              </select>
+            </label>
+            <label>
+              发音模型
+              <select id="ttsModelSetting">
+                <option value="mimo-v2.5-tts">mimo-v2.5-tts</option>
+                <option value="mimo-v2.5-tts-voicedesign">mimo-v2.5-tts-voicedesign</option>
+                <option value="mimo-v2-tts">mimo-v2-tts</option>
+                <option value="gpt-4o-mini-tts">gpt-4o-mini-tts</option>
+                <option value="tts-1-hd">tts-1-hd</option>
+                <option value="tts-1">tts-1</option>
+              </select>
+            </label>
+            <label>
+              音色
+              <select id="ttsVoiceSetting"></select>
+            </label>
+            <label>
+              语气
+              <select id="ttsToneSetting"></select>
+            </label>
+            <label>
+              语速
+              <input id="ttsSpeedSetting" type="number" min="0.25" max="4" step="0.05" />
+            </label>
+            <label class="wide">
+              发音 API Key
+              <input id="ttsApiKeySetting" type="password" placeholder="留空则使用上面的 API Key" autocomplete="off" />
+            </label>
+            <label class="wide">
+              发音 Base URL
+              <input id="ttsBaseUrlSetting" type="url" placeholder="例如：https://api.openai.com/v1" />
+            </label>
+            <label class="wide">
+              发音风格
+              <input id="ttsInstructionsSetting" type="text" maxlength="120" placeholder="例如：像耐心英语老师一样，清晰、自然、稍慢地读。" />
+            </label>
+            <button class="primary-button" type="submit">保存设置</button>
+          </form>
+        </section>
+      </main>
+    </div>
+
+    <dialog id="accountDialog">
+      <form method="dialog" class="account-modal">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Local Account</p>
+            <h2>选择或创建账号</h2>
+          </div>
+        </div>
+        <div id="accountList" class="account-list"></div>
+        <label>
+          新账号昵称
+          <input id="newAccountName" type="text" maxlength="18" placeholder="比如：R 的晨练号" />
+        </label>
+        <div class="row-actions">
+          <button class="primary-button" id="createAccountButton" type="button">创建账号</button>
+          <button class="ghost-button" value="cancel">关闭</button>
+        </div>
+      </form>
+    </dialog>
+
+    <section class="desk-pet" id="deskPet" aria-label="学习桌宠">
+      <div class="pet-bubble" id="petBubble">背一个词，我就恢复一点状态。</div>
+      <div class="pet-card" id="petCard">
+        <div class="pet-head">
+          <div>
+            <strong id="petName">青柚</strong>
+            <span id="petMoodLabel">待机中</span>
+          </div>
+          <button class="icon-button pet-minimize" id="petMinimizeButton" type="button" title="收起桌宠">−</button>
+        </div>
+        <button class="pet-avatar" id="petAvatar" type="button" title="摸摸它">
+          <span class="pet-live2d" id="petLive2d" aria-hidden="true">
+            <span class="pet-part pet-shadow-live"></span>
+            <span class="pet-part pet-hair-back-live"></span>
+            <span class="pet-part pet-body-live"></span>
+            <span class="pet-part pet-neck-live"></span>
+            <span class="pet-part pet-head-live">
+              <span class="pet-part pet-ear-live left"></span>
+              <span class="pet-part pet-ear-live right"></span>
+              <span class="pet-part pet-face-live">
+                <span class="pet-part pet-eye-live left"></span>
+                <span class="pet-part pet-eye-live right"></span>
+                <span class="pet-part pet-glasses-live"></span>
+                <span class="pet-part pet-mouth-live"></span>
+                <span class="pet-part pet-blush-live left"></span>
+                <span class="pet-part pet-blush-live right"></span>
+              </span>
+              <span class="pet-part pet-bang-live bang-a"></span>
+              <span class="pet-part pet-bang-live bang-b"></span>
+              <span class="pet-part pet-bang-live bang-c"></span>
+              <span class="pet-part pet-hair-side-live left"></span>
+              <span class="pet-part pet-hair-side-live right"></span>
+            </span>
+            <span class="pet-part pet-arm-live left"><span></span></span>
+            <span class="pet-part pet-arm-live right"><span></span></span>
+            <span class="pet-part pet-prop-live book"></span>
+            <span class="pet-part pet-prop-live food"></span>
+            <span class="pet-part pet-prop-live cup"></span>
+            <span class="pet-part pet-prop-live note"></span>
+            <span class="pet-part pet-prop-live sparkle"></span>
+            <span class="pet-part pet-prop-live thought"></span>
+          </span>
+          <img class="pet-character" id="petCharacter" src="assets/pets/aoi-study.webp" alt="" onerror="this.onerror=null;this.src='assets/pets/aoi-study-crop.png';" />
+          <span class="pet-shadow"></span>
+          <span class="pet-motion-layer" id="petMotionLayer" aria-hidden="true"></span>
+          <span class="pet-hair-back"></span>
+          <span class="pet-head-shape"></span>
+          <span class="pet-ear left"></span>
+          <span class="pet-ear right"></span>
+          <span class="pet-hair-side left"></span>
+          <span class="pet-hair-side right"></span>
+          <span class="pet-bang bang-a"></span>
+          <span class="pet-bang bang-b"></span>
+          <span class="pet-bang bang-c"></span>
+          <span class="pet-eye left"></span>
+          <span class="pet-eye right"></span>
+          <span class="pet-glasses"></span>
+          <span class="pet-mouth"></span>
+          <span class="pet-hand"></span>
+          <span class="pet-outfit upper" id="petUpperLayer"></span>
+          <span class="pet-outfit lower" id="petLowerLayer"></span>
+          <span class="pet-outfit socks" id="petSocksLayer"></span>
+          <span class="pet-outfit shoes" id="petShoesLayer"></span>
+          <span class="pet-face" id="petFace">•ᴗ•</span>
+        </button>
+        <div class="pet-bars">
+          <label><span>状态</span><i><b id="petHealthBar"></b></i><em id="petHealthText">100</em></label>
+          <label><span>心情</span><i><b id="petMoodBar"></b></i><em id="petMoodText">100</em></label>
+          <label><span>精力</span><i><b id="petEnergyBar"></b></i><em id="petEnergyText">100</em></label>
+        </div>
+        <div class="pet-actions">
+          <button type="button" id="petFeedButton">喂食</button>
+          <button type="button" id="petPlayButton">互动</button>
+          <button type="button" id="petWaveButton">招呼</button>
+          <button type="button" id="petFocusButton">陪练</button>
+          <button type="button" id="petSleepButton">小睡</button>
+        </div>
+        <details class="pet-action-panel">
+          <summary>20 套动作</summary>
+          <div class="pet-action-grid" id="petActionGrid"></div>
+        </details>
+        <details class="pet-shop" id="petShop">
+          <summary>
+            <span>装扮商店</span>
+            <strong id="petEnergyWallet">60 精力</strong>
+          </summary>
+          <div class="pet-shop-tabs" id="petShopTabs"></div>
+          <p class="pet-shop-hint" id="petShopHint">左键解锁/穿戴，右键预览。</p>
+          <div class="skin-grid" id="petSkinGrid"></div>
+        </details>
+        <div class="pet-progress">
+          <span id="petLevelText">Lv.1</span>
+          <strong id="petExpText">0/30</strong>
+        </div>
+      </div>
+      <button class="pet-dock" id="petDockButton" type="button">宠</button>
+    </section>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="official-dicts.js"></script>
+    <script src="examples-index.js"></script>
+    <script src="app.js"></script>
   </body>
 </html>
